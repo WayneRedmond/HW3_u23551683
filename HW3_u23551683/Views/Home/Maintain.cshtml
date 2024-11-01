@@ -1,6 +1,41 @@
 ﻿@model HW3_u23551683.Models.MaintainViewModel
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .modal-body .form-control {
+            border: 2px solid #343a40;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+            .modal-body .form-control:focus {
+                border-color: #222427;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+
+        .modal-body .form-select {
+            border: 2px solid #343a40;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+            .modal-body .form-select:focus {
+                border-color: #222427;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+
+        .modal-header {
+            background-color: #f8f9fa;
+        }
+
+        .modal-title {
+            margin-bottom: 0;
+        }
+
+        .modal-body .btn-primary {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <div class="container">

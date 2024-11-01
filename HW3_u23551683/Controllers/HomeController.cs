@@ -98,7 +98,6 @@ namespace HW3_u23551683.Controllers
         {
             if (ModelState.IsValid)
             {
-                
                 if (book.AuthorId.HasValue)
                 {
                     book.Author = await _context.Authors.FindAsync(book.AuthorId.Value);
@@ -111,7 +110,14 @@ namespace HW3_u23551683.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            var authors = await _context.Authors.ToListAsync();
+            var types = await _context.Types.ToListAsync();
+
+            ViewBag.Authors = new SelectList(authors, "AuthorId", "Name", book.AuthorId);
+            ViewBag.Types = new SelectList(types, "TypeId", "Name", book.TypeId);
+
             return View(book);
+
         }
         public async Task<ActionResult> Maintain(int page = 1, int authorPage = 1, int borrowPage = 1)
         {

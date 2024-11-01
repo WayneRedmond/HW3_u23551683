@@ -5,6 +5,51 @@
 <head>
     <title>Library Management - Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .navbar-custom {
+            background-color: #343a40;
+        }
+
+        .nav-link-custom {
+            background-color: #d3d3d3;
+            color: #000;
+            margin-right: 15px;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #939292;
+        }
+        .modal-body .form-control {
+            border: 2px solid #343a40; 
+            border-radius: 5px; 
+            transition: border-color 0.3s; 
+        }
+            .modal-body .form-control:focus {
+                border-color: #222427;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+        .modal-body .form-select {
+            border: 2px solid #343a40;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+            .modal-body .form-select:focus {
+                border-color: #222427;
+                box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            }
+        .modal-header {
+            background-color: #f8f9fa;
+        }
+        
+        .modal-title {
+            margin-bottom: 0;
+        }
+        .modal-body .btn-primary {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
@@ -159,11 +204,11 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Author</label>
-                            @Html.DropDownList("AuthorId", new SelectList(Model.Authors, "AuthorId", "Name"), "Select Author", new { @id = "createBookAuthorId", @class = "form-select", required = "required" })
+                            @Html.DropDownList("AuthorId", new SelectList(Model.Authors, "AuthorId", "Name"), "Select Author", new { @class = "form-select", required = "required" })
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Type</label>
-                            @Html.DropDownList("TypeId", new SelectList(Model.Types, "TypeId", "Name"), "Select Type", new { @id = "createBookTypeId", @class = "form-select", required = "required" })
+                            @Html.DropDownList("TypeId", new SelectList(Model.Types, "TypeId", "Name"), "Select Type", new { @class = "form-select", required = "required" })
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Page Count</label>
@@ -175,6 +220,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Create Book</button>
                     }
+
                 </div>
             </div>
         </div>
