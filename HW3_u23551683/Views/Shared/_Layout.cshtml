@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - My ASP.NET Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        .navbar-custom {
+            background-color: #343a40;
+        }
+
+        .nav-link-custom {
+            background-color: #d3d3d3;
+            color: #000;
+            margin-right: 15px;
+            padding: 3px 6px;
+            border-radius: 4px;
+        }
+
+            .nav-link-custom:hover {
+                background-color: #a9a9a9;
+                color: #fff;
+            }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-custom">
+        <div class="container">
+            @Html.ActionLink("Libary", "Index", "Home", new { area = "" }, new { @class = "navbar-brand nav-link-custom" })
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav flex-grow-1">
+                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link nav-link-custom" })</li>
+                    <li>@Html.ActionLink("Maintain", "Maintain", "Home", new { area = "" }, new { @class = "nav-link nav-link-custom" })</li>
+                    <li>@Html.ActionLink("Reports", "Reports", "Home", new { area = "" }, new { @class = "nav-link nav-link-custom" })</li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - u23551683 HW3</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

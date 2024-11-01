@@ -1,0 +1,394 @@
+﻿@model HW3_u23551683.Models.MaintainViewModel
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<div class="container">
+    <div class="container">
+        <div class="row">
+            <!-- Column for Type Table -->
+            <div class="col-md-6">
+                <h4>Types</h4>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTypeModal">
+                    Add Type
+                </button>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Type Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var type in Model.Types)
+                        {
+                            <tr>
+                                <td>@type.Name</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="editType(@type.TypeId)">Edit</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteType(@type.TypeId)">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>            
+            <!-- Column for Author Table -->
+            <div class="col-md-6">
+                <h4>Authors</h4>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createAuthorModal">
+                    Add Author
+                </button>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Author Name</th>
+                            <th>Author Surname</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var author in Model.Authors)
+                        {
+                            <tr>
+                                <td>@author.Name</td>
+                                <td>@author.Surname</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="editAuthor(@author.AuthorId)">Edit</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteAuthor(@author.AuthorId)">Delete</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-center align-items-center my-2">
+                    @if (Model.CurrentPage > 1)
+                    {
+                        <a href="@Url.Action("Maintain", new { page = Model.CurrentPage, authorPage = 1 })" class="btn btn-primary me-1">1</a>
+                        if (Model.CurrentPage > 4)
+                        {
+                            <span>...</span>
+                        }
+                    }
+
+                    @for (int i = Math.Max(2, Model.CurrentPage - 1); i <= Math.Min(Model.TotalPages - 1, Model.CurrentPage + 1); i++)
+                    {
+                        <a href="@Url.Action("Maintain", new { page = Model.CurrentPage, authorPage = i })" class="btn btn-primary me-1">@i</a>
+                    }
+
+                    @if (Model.TotalPages > 1)
+                    {
+                        <a href="@Url.Action("Maintain", new { page = Model.CurrentPage, authorPage = Model.TotalPages })" class="btn btn-primary me-1">@Model.TotalPages</a>
+                    }
+
+                    @if (Model.CurrentPage + 1 < Model.TotalPages)
+                    {
+                        <a href="@Url.Action("Maintain", new { page = Model.CurrentPage, authorPage = Model.CurrentPage + 1 })" class="btn btn-primary me-1">>></a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Borrows Section -->
+    <h2>Borrows</h2>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBorrowModal">
+        Add Borrow
+    </button>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Book Title</th>
+                <th>Page Count</th>
+                <th>Student Name</th>
+                <th>Student Surname</th>
+                <th>Student Class</th>
+                <th>Borrow Date</th>
+                <th>Return Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var borrow in Model.Borrows)
+            {
+                <tr>
+                    <td>@borrow.Book.Name</td>
+                    <td>@borrow.Book.PageCount</td>
+                    <td>@borrow.Student.Name</td>
+                    <td>@borrow.Student.Surname</td>
+                    <td>@borrow.Student.Class</td>
+                    <td>@borrow.TakenDate</td>
+                    <td>@borrow.BroughtDate</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editBorrowModal" onclick="populateEditBorrowModal(@borrow.BorrowId, @borrow.Book.BookId, @borrow.Student.StudentId, '@borrow.TakenDate.ToString()', '@borrow.BroughtDate')">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteBorrow(@borrow.BorrowId)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center align-items-center my-2">
+        @if (Model.BorrowCurrentPage > 1)
+        {
+            <a href="@Url.Action("Maintain", new { page = Model.BorrowCurrentPage, borrowPage = 1 })" class="btn btn-primary me-1">1</a>
+            if (Model.BorrowCurrentPage > 4)
+            {
+                <span>...</span>
+            }
+        }
+
+        @for (int j = Math.Max(2, Model.BorrowCurrentPage - 1); j <= Math.Min(Model.BorrowTotalPages - 1, Model.BorrowCurrentPage + 1); j++)
+        {
+            <a href="@Url.Action("Maintain", new { page = Model.BorrowCurrentPage, borrowPage = j })" class="btn btn-primary me-1">@j</a>
+        }
+        @if (Model.BorrowCurrentPage + 1 < Model.BorrowTotalPages)
+        {
+            <a href="@Url.Action("Maintain", new { page = Model.BorrowCurrentPage, borrowPage = Model.BorrowCurrentPage + 1 })" class="btn btn-primary me-1">>></a>
+        }
+        @if (Model.BorrowTotalPages > 1)
+        {
+            <a href="@Url.Action("Maintain", new { page = Model.BorrowCurrentPage, borrowPage = Model.BorrowTotalPages })" class="btn btn-primary me-1">@Model.BorrowTotalPages</a>
+        }
+    </div>
+</div>
+
+        <!-- Create Type Modal -->
+        <div class="modal fade" id="createTypeModal" tabindex="-1" aria-labelledby="createTypeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/Home/CreateType" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createTypeModalLabel">Create Type</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="typeName">Type Name</label>
+                                <input type="text" class="form-control" name="Name" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Type Modal -->
+        <div class="modal fade" id="editTypeModal" tabindex="-1" aria-labelledby="editTypeModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/Home/EditType" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editTypeModalLabel">Edit Type</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="TypeId" id="editTypeId" />
+                            <div class="form-group">
+                                <label for="typeName">Type Name</label>
+                                <input type="text" class="form-control" name="Name" id="editTypeName" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Create Author Modal -->
+        <div class="modal fade" id="createAuthorModal" tabindex="-1" aria-labelledby="createAuthorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/Home/CreateAuthor" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createAuthorModalLabel">Create Author</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="authorName">Author Name</label>
+                                <input type="text" class="form-control" name="Name" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="authorSurname">Author Surname</label>
+                                <input type="text" class="form-control" name="Surname" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Author Modal -->
+        <div class="modal fade" id="editAuthorModal" tabindex="-1" aria-labelledby="editAuthorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/Home/EditAuthor" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editAuthorModalLabel">Edit Author</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="AuthorId" id="editAuthorId" />
+                            <div class="form-group">
+                                <label for="authorName">Author Name</label>
+                                <input type="text" class="form-control" name="Name" id="editAuthorName" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="authorName">Author Surname</label>
+                                <input type="text" class="form-control" name="Surname" id="editAuthorSurname" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Create Borrow Modal -->
+        <div class="modal fade" id="createBorrowModal" tabindex="-1" aria-labelledby="createBorrowModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/Home/CreateBorrow" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createBorrowModalLabel">Create Borrow</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="bookId">Book ID</label>
+                                <input type="number" class="form-control" name="BookId" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="studentId">Student ID</label>
+                                <input type="number" class="form-control" name="StudentId" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="borrowDate">Borrow Date</label>
+                                <input type="date" class="form-control" name="TakenDate" required />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Edit Borrow Modal -->
+        <div class="modal fade" id="editBorrowModal" tabindex="-1" aria-labelledby="editBorrowModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="/Home/EditBorrow" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editBorrowModalLabel">Edit Borrow</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="BorrowId" id="editBorrowId" />
+                            <div class="form-group">
+                                <label for="bookId">Book ID</label>
+                                <input type="number" class="form-control" name="BookId" id="editBorrowBookId" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="studentId">Student ID</label>
+                                <input type="number" class="form-control" name="StudentId" id="editBorrowStudentId" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="takenDate">Taken Date</label>
+                                <input type="date" class="form-control" name="TakenDate" id="editTakenDate" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="broughtDate">Return Date</label>
+                                <input type="date" class="form-control" name="BroughtDate" id="editBroughtDate" required />
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="modal" id="successModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Success</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>@TempData["SuccessMessage"]</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <script>
+            function populateEditTypeModal(typeId, typeName) {
+                document.getElementById("editTypeId").value = typeId;
+                document.getElementById("editTypeName").value = typeName;
+            }
+
+            function deleteType(id) {
+                if (confirm("Are you sure you want to delete this Type?")) {
+                    $.post('/Home/DeleteType', { id: id }, function () {
+                        location.reload();
+                    });
+                }
+            }
+
+            function populateEditAuthorModal(authorId, authorName, AuthorSurname) {
+                document.getElementById("editAuthorId").value = authorId;
+                document.getElementById("editAuthorName").value = authorName;
+                document.getElementById("editAuthorSurname").value = authorSurname;
+            }
+
+            function deleteAuthor(id) {
+                if (confirm("Are you sure you want to delete this Author?")) {
+                    $.post('/Home/DeleteAuthor', { id: id }, function () {
+                        location.reload();
+                    });
+                }
+            }
+
+            function populateEditBorrowModal(borrowId, bookId, studentId, takenDate, broughtDate) {
+                document.getElementById("editBorrowId").value = borrowId;
+                document.getElementById("editBookId").value = bookId;
+                document.getElementById("editStudentId").value = studentId;
+                document.getElementById("editTakenDate").value = takenDate; // Ensure the correct format (YYYY-MM-DD)
+                document.getElementById("editBroughtDate").value = broughtDate; // Ensure the correct format (YYYY-MM-DD)
+            }
+
+
+            function deleteBorrow(id) {
+                if (confirm("Are you sure you want to delete this Borrow?")) {
+                    $.post('/Home/DeleteBorrow', { id: id }, function () {
+                        location.reload();
+                    });
+                }
+            }
+        </script>
+
